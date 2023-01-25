@@ -24,9 +24,10 @@ import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 import { encode as btoa } from "base-64";
 import axios from "axios";
+import React from "react";
 import { useEffect, useState } from 'react';
 
-export default function data() {
+export default function Data() {
   const Plugin = ({ image, name }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       <MDAvatar src={image} name={name} size="sm" variant="rounded" />
@@ -35,54 +36,65 @@ export default function data() {
       </MDTypography>
     </MDBox>
   );
-
-  const client = axios.create({
-    baseURL: "https://jsonplaceholder.typicode.com/posts" 
-  });
-  const [feedbacks, setfeedbacks] = useState([]);
-
-  useEffect(() => {
-    client.get('?_limit=10').then((response) => {
-        setPosts(response.data);
-    });
-  }, []);
-
-  async function awpSendRequest() {
+  
+  
+    const baseURL = "https://dev2.floopbox.com/wp-json/thd/v1/feedbacks";
+  
+    const [feedbacks, setfeedbacks] = useState([]);
     const username = "dilruba_dev2";
     const password = "QzoU hqvK iEM3 wTVA WsGy Qwz8";
-    const url = "https://dev2.floopbox.com/wp-json/thd/v1/feedbacks";
     let auth = btoa(`${username}:${password}`);
     auth = `Basic ${auth}`;
-    fetch(url, {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-      headers: new Headers({
-        Authorization: auth,
-        Origin: "*",
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => console.log(json));
-  }
+    const options = {
+      Authorization: auth,
+      Origin: "*"
+    }
+
+    useEffect(() => {
+      axios.get(baseURL, {options}).then((response) => {
+        setfeedbacks(response.data);
+      });
+    }, []);
+
+    console.log(feedbacks);
+  
+
+  // async function awpSendRequest() {
+  //   const username = "dilruba_dev2";
+  //   const password = "QzoU hqvK iEM3 wTVA WsGy Qwz8";
+  //   const url = "https://dev2.floopbox.com/wp-json/thd/v1/feedbacks";
+  //   let auth = btoa(`${username}:${password}`);
+  //   auth = `Basic ${auth}`;
+  //   fetch(url, {
+  //     method: "GET",
+  //     mode: "cors",
+  //     credentials: "include",
+  //     headers: new Headers({
+  //       Authorization: auth,
+  //       Origin: "*",
+  //     }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((json) => console.log(json));
+  // }
   
   // if (document.readyState !== "loading") {
   //   feedbacks = awpSendRequest();
   // } else {
-  //   document.addEventListener("DOMContentLoaded", awpSendRequest);
-  // }
+    //document.addEventListener("DOMContentLoaded", awpSendRequest);
+  //}
 
   const feedback = [
-    { image: LogoAsana, name: "Asana", reason: "100", comment: "comment", date: "date" },
-    { image: LogoAsana, name: "plugin 1", reason: "100", comment: "comment", date: "date" },
-    { image: LogoAsana, name: "plugin 1", reason: "100", comment: "comment", date: "date" },
-    { image: LogoAsana, name: "plugin 1", reason: "100", comment: "comment", date: "date" },
-    { image: LogoAsana, name: "plugin 1", reason: "100", comment: "comment", date: "date" },
+    {  name: "Asana", reason: "100", comment: "comment", date: "date" },
+    {  name: "plugin 1", reason: "100", comment: "comment", date: "date" },
+    {  name: "plugin 1", reason: "100", comment: "comment", date: "date" },
+    {  name: "plugin 1", reason: "100", comment: "comment", date: "date" },
+    {  name: "plugin 1", reason: "100", comment: "comment", date: "date" },
   ];
 
   function feedbackTableRows(item) {
     return {
-      plugin: <Plugin name="Asana" />,
+      plugin: <Plugin name={item.plugin} />,
       reason: (
         <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
           {item.reason}
@@ -90,12 +102,12 @@ export default function data() {
       ),
       comment: (
         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-          done
+          {item.comment}
         </MDTypography>
       ),
       date: (
         <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-          done
+          {item.date}
         </MDTypography>
       ),
       action: (
@@ -105,7 +117,7 @@ export default function data() {
       ),
     };
   }
-  const feeds = feedback.map(feedbackTableRows);
+  const feeds = feedbacks.map(feedbackTableRows);
   return {
     columns: [
       { Header: "plugin", accessor: "plugin", width: "30%", align: "left" },
