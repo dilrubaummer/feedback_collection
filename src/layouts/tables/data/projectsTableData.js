@@ -42,7 +42,7 @@ export default function Data() {
   
     const [feedbacks, setfeedbacks] = useState([]);
     const username = "dilruba_dev2";
-    const password = "QzoU hqvK iEM3 wTVA WsGy Qwz8";
+    const password = "password";
     let auth = btoa(`${username}:${password}`);
     auth = `Basic ${auth}`;
     const options = {
